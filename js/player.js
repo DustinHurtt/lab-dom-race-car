@@ -19,16 +19,29 @@ class Player {
   }
 
   move() {
-    if (
-      this.left > 0 + this.width &&
-      this.left < this.gameScreen.width - this.width
-    ) {
-      this.left = this.directionX;
-      this.updatePosition();
+    this.left += this.directionX;
+    this.top += this.directionY;
+
+    if (this.left <= 10) {
+      this.left = 10;
+      this.directionX *= -0.5;
     }
 
-    if (this.top < this.gameScreen.height && this.top > 0)
-      this.top = this.directionY;
+    if (this.top <= 10) {
+      this.top = 10;
+      this.directionY *= -0.5;
+    }
+
+    if (this.left >= this.gameScreen.offsetWidth - this.width - 10) {
+      this.left = this.gameScreen.offsetWidth - this.width - 10;
+      this.directionX *= -0.5;
+    }
+
+    if (this.top >= this.gameScreen.offsetHeight - this.height - 10) {
+      this.top = this.gameScreen.offsetHeight - this.height - 10;
+      this.directionY *= -0.5;
+    }
+
     this.updatePosition();
   }
 
@@ -37,13 +50,20 @@ class Player {
     this.element.style.top = `${this.top}px`;
   }
 
-  didCollide(obstacle){
-    if( 
-        
-    ){
-        return true
+  didCollide(obstacle) {
+    const playerRect = this.element.getBoundingClientRect();
+    const obstacleRect = obstacle.element.getBoundingClientRect();
+
+    if (
+      playerRect.left < obstacleRect.right &&
+      playerRect.right > obstacleRect.left &&
+      playerRect.top < obstacleRect.bottom &&
+      playerRect.bottom > obstacleRect.top
+    ) {
+      console.log("Colliding");
+      return true;
     } else {
-        return false
+      return false;
     }
   }
 }

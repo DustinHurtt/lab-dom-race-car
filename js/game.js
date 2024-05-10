@@ -14,6 +14,7 @@ class Game {
         this.gameIsOver = false
         this.gameIntervalId = null
         this.gameLoopFrequency = 1000/60
+        this.frames = 0
     }
     
     start() {
@@ -34,6 +35,12 @@ class Game {
     }
 
     gameLoop() {
+        this.frames += 1
+
+        if (this.frames % 120 === 0) {
+            this.obstacles.push(new Obstacle(this.gameScreen))
+        }
+
         this.update()
 
         if (this.gameIsOver === true) {
@@ -42,6 +49,18 @@ class Game {
     }
 
     update() {
-        console.log("Updating!!!!")
+        this.player.move()
+
+        console.log("This is the obstacle array length", this.obstacles.length)
+        this.obstacles.forEach((obstacle, i) => {
+            obstacle.move()
+
+            if (obstacle.top > 640) {
+                obstacle.element.remove()
+                this.obstacles.splice(i, 1)
+            }
+        })
+
+
     }
 }
